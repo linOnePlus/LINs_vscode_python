@@ -1,1 +1,0 @@
-moduleb="test import folder successfully"
