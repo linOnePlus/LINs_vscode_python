@@ -11,7 +11,7 @@ print(test[0:3])  # 左闭右开
 print(test[-1])
 print(100 % 12)
 
-print("查询字符串的索引吗"+'1' in test)  # 数字不能放在字符串里面
+print("查询字符串的索引吗"+str('1' in test))  # 数字不能放在字符串里面
 print(test + test)
 print(test * 3)
 print(type(2 / 1))
