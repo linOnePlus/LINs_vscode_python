@@ -6,12 +6,14 @@ import yaml
 from appium import webdriver
 from appium.webdriver.common.touch_action import TouchAction
 from appium.webdriver.extensions.android.gsm import GsmCallActions
+from appium.webdriver.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
 
 
 class TestCase:
-    yaml_parm = yaml.safe_load(open("search.yaml","r"))
+    yaml_parm = yaml.safe_load(open("parm.yaml", "r"))
     print(yaml_parm)
+
     def setup(self):
         caps = {}
         caps["platformName"] = "Android"
@@ -87,7 +89,7 @@ class TestCase:
         el2.send_keys(keycode)
 
     @pytest.mark.parametrize("keyword,keycode", yaml_parm)
-    def test_yaml(self,keyword,keycode):
+    def test_parmyaml(self, keyword, keycode):
         el2 = self.driver.find_element_by_id("com.xueqiu.android:id/tv_agree")
         el2.click()
         self.driver.find_element_by_id("tv_search").click()
@@ -98,6 +100,36 @@ class TestCase:
         el2 = self.driver.find_element_by_id("search_input_text")
         el2.send_keys(keycode)
 
+    # 测试步骤数据驱动
+    def test_testcaseyaml(self):
+        Testtestcaseyaml("testcase.yaml").run(self.driver)
+
     def teardown(self):
         pass
         # self.driver.quit()
+
+# 测试步骤数据驱动类
+class Testtestcaseyaml:
+    def __init__(self, path):
+        file = open(path, "r")
+        self.steps = yaml.safe_load(file)
+        print(
+            self.steps)  # [{'id': 'tv_agree'}, {'id': 'tv_search'}, {'id': 'search_input_text', 'input': 'alibaba'}, {'id': 'tv_top_list', 'get': 'text'}]
+
+    # 声明类型能自动补全方法
+    def run(self, driver: WebDriver):
+        for step in self.steps:
+            print(step)  # {'id': 'tv_agree'}
+            element = None
+            if isinstance(step, dict):
+                if "id" in step.keys():
+                    element = driver.find_element_by_id(step["id"])
+                    if step.keys() != "tv_top_list":
+                        element.click()
+
+                elif "xpath" in step.keys():
+                    element = driver.find_element_by_xpath(step["xpath"])
+                if "input" in step.keys():
+                    element.send_keys(step["input"])
+                # if "get" in step.keys():
+                #     element.get_attribute(step["get"])
