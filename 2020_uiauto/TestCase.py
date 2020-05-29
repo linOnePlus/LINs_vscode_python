@@ -108,6 +108,7 @@ class TestCase:
         pass
         # self.driver.quit()
 
+
 # 测试步骤数据驱动类
 class Testtestcaseyaml:
     def __init__(self, path):
@@ -133,3 +134,4 @@ class Testtestcaseyaml:
                     element.send_keys(step["input"])
                 # if "get" in step.keys():
                 #     element.get_attribute(step["get"])
+
